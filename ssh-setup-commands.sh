@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# SSH Key Setup Script for Server
+# Run this script by copying and pasting the commands
+
+echo "=========================================="
+echo "SSH Key Setup Instructions"
+echo "=========================================="
+echo ""
+echo "Step 1: SSH into your server"
+echo "----------------------------------------"
+echo "Copy and paste this command in your terminal:"
+echo ""
+echo "  ssh root@45.77.170.242"
+echo ""
+echo "Password: c]6EvVHNfi\$N7r,L"
+echo ""
+echo "Step 2: After logging in, run these commands"
+echo "----------------------------------------"
+echo ""
+echo "  mkdir -p ~/.ssh"
+echo "  chmod 700 ~/.ssh"
+echo "  echo 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGMRjw+lvU7iKeVUcyRhCgMMnmArExP24Xu71YOESMWE github-actions-deploy' >> ~/.ssh/authorized_keys"
+echo "  chmod 600 ~/.ssh/authorized_keys"
+echo "  exit"
+echo ""
+echo "Step 3: Test SSH key login (on your local machine)"
+echo "----------------------------------------"
+echo ""
+echo "  ssh -i ~/.ssh/github_actions_key root@45.77.170.242 'echo Success!'"
+echo ""
+echo "=========================================="
