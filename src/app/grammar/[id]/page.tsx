@@ -9,6 +9,11 @@ import { VideoUnit } from "@/components/VideoUnit";
 import { Chatbot } from "@/components/Chatbot";
 import { WritingEvaluation } from "@/components/WritingEvaluation";
 import { EvaluationResult } from "@/types/evaluation";
+import { RuleCard } from "@/components/RuleCard";
+import { LearningObjectives } from "@/components/LearningObjectives";
+import { ActivityUnit } from "@/components/ActivityUnit";
+import { WarmupActivity } from "@/components/WarmupActivity";
+import { Navigation } from "@/components/Navigation";
 
 const MAX_WRITING_LENGTH = 2000;
 const MIN_WRITING_LENGTH = 10;
@@ -63,39 +68,6 @@ class LessonErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBound
   }
 }
 
-// Navigation Component
-function Navigation() {
-  return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass-card-elevated border-b border-academic-blue/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-academic-blue to-academic-blue-dark flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
-              <span className="font-display text-lg text-white">GQ</span>
-            </div>
-            <span className="font-display text-lg font-semibold text-text-primary hidden sm:block group-hover:text-academic-blue transition-colors">Grammar Quest</span>
-          </Link>
-
-          <div className="hidden md:flex items-center gap-6">
-            <Link href="/" className="nav-link">Home</Link>
-            <Link href="/grammar" className="nav-link active">Grammar</Link>
-            <Link href="/practice" className="nav-link">Practice</Link>
-            <Link href="/game" className="nav-link">Game</Link>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="points-display hover-glow cursor-pointer">
-              <span className="text-white">★</span>
-              <span>1,250</span>
-            </div>
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-academic-blue to-sky-light flex items-center justify-center text-white font-display text-sm cursor-pointer hover:scale-105 transition-transform shadow-md">JK</div>
-          </div>
-        </div>
-      </div>
-    </nav>
-  );
-}
-
 // Teaching Unit Component
 function TeachingUnit({ unit }: { unit: LessonUnit }) {
   return (
@@ -110,27 +82,16 @@ function TeachingUnit({ unit }: { unit: LessonUnit }) {
         </div>
       </div>
 
+      {/* Learning Objectives */}
+      {unit.learningObjectives && (
+        <LearningObjectives objectives={unit.learningObjectives} />
+      )}
+
       {unit.content && (
         <div className="space-y-4">
           <div className="bg-bg-secondary rounded-lg p-4">
             <p className="font-body text-text-primary leading-relaxed">{unit.content.explanation}</p>
           </div>
-
-          {unit.content.rules && (
-            <div className="bg-white rounded-lg border border-academic-blue/20 p-4">
-              <h4 className="font-display text-sm font-semibold text-academic-blue mb-3 flex items-center gap-2">
-                <span>📋</span> Rules
-              </h4>
-              <ul className="space-y-2">
-                {unit.content.rules.map((rule, i) => (
-                  <li key={i} className="flex items-start gap-3 font-body text-text-primary/80">
-                    <span className="text-academic-blue font-bold">•</span>
-                    <span>{rule}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
 
           {unit.content.tips && (
             <div className="bg-progress-green/10 rounded-lg border border-progress-green/30 p-4">
@@ -145,7 +106,39 @@ function TeachingUnit({ unit }: { unit: LessonUnit }) {
         </div>
       )}
 
-      {unit.examples && (
+      {/* Rules with Examples - New Enhanced Format */}
+      {unit.rulesWithExamples && (
+        <div className="mt-6">
+          <h4 className="font-display text-sm font-semibold text-academic-blue mb-4 flex items-center gap-2">
+            <span>📋</span> Rules & Examples
+          </h4>
+
+          {/* Core Rules First */}
+          {unit.rulesWithExamples
+            .filter((r) => r.category === 'core')
+            .map((ruleData, i) => (
+              <RuleCard key={i} ruleData={ruleData} />
+            ))}
+
+          {/* Special Cases */}
+          {unit.rulesWithExamples.some((r) => r.category === 'special') && (
+            <>
+              <div className="flex items-center gap-2 my-6">
+                <span className="text-amber-500">⚠️</span>
+                <span className="font-display text-sm font-semibold text-amber-600">Special Cases</span>
+              </div>
+              {unit.rulesWithExamples
+                .filter((r) => r.category === 'special')
+                .map((ruleData, i) => (
+                  <RuleCard key={i} ruleData={ruleData} />
+                ))}
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Legacy Examples (for units without rulesWithExamples) */}
+      {unit.examples && !unit.rulesWithExamples && (
         <div className="mt-4">
           <h4 className="font-display text-sm font-semibold text-achievement-gold mb-3 flex items-center gap-2">
             <span>✏️</span> Examples
@@ -592,7 +585,7 @@ export default function LessonDetailPage() {
     );
   }
 
-  const handleQuizComplete = (score: number, total: number) => {
+  const handleQuizComplete = () => {
     setCompletedUnits(prev => new Set([...prev, currentUnit]));
 
     if (currentUnit < lesson.units.length - 1) {
@@ -663,11 +656,16 @@ export default function LessonDetailPage() {
   };
 
   const progress = Math.round((completedUnits.size / lesson.units.length) * 100);
+  const activeUnit = lesson.units[currentUnit];
+  const currentUnitExamples =
+    activeUnit.examples ||
+    activeUnit.rulesWithExamples?.flatMap((ruleData) => ruleData.examples) ||
+    [];
 
   return (
     <LessonErrorBoundary>
       <div className="min-h-screen pt-16 pb-20 md:pb-0">
-        <Navigation />
+        <Navigation activeRoute="/grammar" />
 
       {/* Lesson Header */}
       <section className="hero-bg py-8 px-4">
@@ -743,7 +741,7 @@ export default function LessonDetailPage() {
                     <div className="space-y-2">
                       <h2 className="font-display text-2xl font-bold text-text-primary">Lesson Complete!</h2>
                       <p className="font-body text-sm text-text-secondary/70">
-                        Congratulations on completing the "{lesson.title}" lesson!
+                        Congratulations on completing the &quot;{lesson.title}&quot; lesson!
                       </p>
                       <div className="inline-flex items-center gap-4 bg-bg-secondary rounded-full px-5 py-2">
                         <div className="text-center">
@@ -854,16 +852,36 @@ export default function LessonDetailPage() {
             </div>
           ) : (
             <>
-              {lesson.units[currentUnit].type === 'quiz' ? (
+              {activeUnit.type === 'quiz' ? (
                 <QuizUnit
-                  unit={lesson.units[currentUnit]}
+                  unit={activeUnit}
                   onComplete={handleQuizComplete}
                   onAutoScroll={scrollToContent}
                   onWritingSubmit={handleWritingSubmit}
                 />
-              ) : lesson.units[currentUnit].type === 'video' ? (
+              ) : activeUnit.type === 'video' ? (
                 <>
-                  <VideoUnit unit={lesson.units[currentUnit]} />
+                  <VideoUnit unit={activeUnit} />
+                  <button
+                    onClick={handleUnitComplete}
+                    className="w-full py-3 rounded-lg font-display font-semibold bg-gradient-to-r from-academic-blue to-academic-blue-dark text-white hover:shadow-md transition-all"
+                  >
+                    {currentUnit < lesson.units.length - 1 ? 'Continue →' : 'Complete Lesson'}
+                  </button>
+                </>
+              ) : activeUnit.type === 'warmup' ? (
+                <>
+                  <WarmupActivity unit={activeUnit} />
+                  <button
+                    onClick={handleUnitComplete}
+                    className="w-full py-3 rounded-lg font-display font-semibold bg-gradient-to-r from-academic-blue to-academic-blue-dark text-white hover:shadow-md transition-all"
+                  >
+                    {currentUnit < lesson.units.length - 1 ? 'Continue →' : 'Complete Lesson'}
+                  </button>
+                </>
+              ) : activeUnit.type === 'activity' ? (
+                <>
+                  <ActivityUnit unit={activeUnit} />
                   <button
                     onClick={handleUnitComplete}
                     className="w-full py-3 rounded-lg font-display font-semibold bg-gradient-to-r from-academic-blue to-academic-blue-dark text-white hover:shadow-md transition-all"
@@ -873,7 +891,7 @@ export default function LessonDetailPage() {
                 </>
               ) : (
                 <>
-                  <TeachingUnit unit={lesson.units[currentUnit]} />
+                  <TeachingUnit unit={activeUnit} />
                   <button
                     onClick={handleUnitComplete}
                     className="w-full py-3 rounded-lg font-display font-semibold bg-gradient-to-r from-academic-blue to-academic-blue-dark text-white hover:shadow-md transition-all"
@@ -889,10 +907,10 @@ export default function LessonDetailPage() {
 
         <Chatbot
           lessonTitle={lesson.title}
-          unitTitle={lesson.units[currentUnit]?.title || ''}
-          unitType={lesson.units[currentUnit]?.type || 'teach'}
-          isQuiz={lesson.units[currentUnit]?.type === 'quiz'}
-          unitExamples={lesson.units[currentUnit]?.examples || []}
+          unitTitle={activeUnit?.title || ''}
+          unitType={activeUnit?.type || 'teach'}
+          isQuiz={activeUnit?.type === 'quiz'}
+          unitExamples={currentUnitExamples}
         />
       </div>
     </LessonErrorBoundary>

@@ -43,8 +43,8 @@ export function Chatbot({ lessonTitle, unitTitle, unitType, isQuiz, unitExamples
   useEffect(() => {
     if (isOpen && messages.length === 0) {
       const welcomeMessage = isQuiz
-        ? "Hi! I'm here to help you think through the quiz questions. I won't give you direct answers, but I'll guide you to find them yourself! 🤔\n\nYou can ask me in English or Chinese (繁體/简体)."
-        : `Hi! I'm your grammar tutor assistant. Feel free to ask me anything about "${unitTitle}"! 📚\n\nYou can ask me in English or Chinese (繁體/简体).`;
+        ? "Hi! I'm here to help you think through the quiz questions. I won't give you direct answers, but I'll guide you to find them yourself! 🤔\n\nYou can ask me in English or Chinese (繁體/簡體)."
+        : `Hi! I'm your grammar tutor assistant. Feel free to ask me anything about "${unitTitle}"! 📚\n\nYou can ask me in English or Chinese (繁體/簡體).`;
 
       setMessages([{ role: 'assistant', content: welcomeMessage }]);
       prevUnitRef.current = unitTitle;

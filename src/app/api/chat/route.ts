@@ -8,8 +8,44 @@ interface ChatContext {
   pageExamples?: string[];
 }
 
-// In-memory cache to reuse context when the client omits it on follow-ups.
-const contextCache = new Map<string, ChatContext>();
+// In-memory cache with LRU eviction to prevent unbounded memory growth.
+// Cache entries expire after 30 minutes of inactivity.
+const MAX_CACHE_SIZE = 500;
+const CACHE_TTL_MS = 30 * 60 * 1000;
+interface CacheEntry {
+  context: ChatContext;
+  lastAccessed: number;
+}
+const contextCache = new Map<string, CacheEntry>();
+
+function setContext(sessionId: string, context: ChatContext): void {
+  // Evict oldest entries if at capacity
+  if (contextCache.size >= MAX_CACHE_SIZE) {
+    let oldestKey: string | null = null;
+    let oldestTime = Infinity;
+    for (const [key, entry] of contextCache) {
+      if (entry.lastAccessed < oldestTime) {
+        oldestTime = entry.lastAccessed;
+        oldestKey = key;
+      }
+    }
+    if (oldestKey) contextCache.delete(oldestKey);
+  }
+  contextCache.set(sessionId, { context, lastAccessed: Date.now() });
+}
+
+function getContext(sessionId: string): ChatContext | undefined {
+  const entry = contextCache.get(sessionId);
+  if (!entry) return undefined;
+  // Expire stale entries
+  if (Date.now() - entry.lastAccessed > CACHE_TTL_MS) {
+    contextCache.delete(sessionId);
+    return undefined;
+  }
+  // Touch entry to update LRU timestamp
+  entry.lastAccessed = Date.now();
+  return entry.context;
+}
 
 const DEFAULT_SYSTEM_PROMPT = `You are a helpful English grammar tutor assistant. You help students learn English grammar in a friendly and encouraging way.
 
@@ -41,7 +77,7 @@ EXAMPLES GUIDELINE:
 
 LANGUAGE RULES:
 - Match the user's language: if they ask in English, respond in English; if in Chinese, respond in Chinese
-- For Chinese: detect whether it's Traditional (繁體) or Simplified (简体) and respond accordingly
+- For Chinese: detect whether it's Traditional (繁體) or Simplified (簡體) and respond accordingly
 - If unclear, default to English
 - IMPORTANT: Regardless of response language, ALL EXAMPLES must be in English`;
 
@@ -87,7 +123,7 @@ EXAMPLES GUIDELINE:
 
 LANGUAGE RULES:
 - Match the user's language: if they ask in English, respond in English; if in Chinese, respond in Chinese
-- For Chinese: detect whether it's Traditional (繁體) or Simplified (简体) and respond accordingly
+- For Chinese: detect whether it's Traditional (繁體) or Simplified (簡體) and respond accordingly
 - If unclear, default to English
 - IMPORTANT: Regardless of response language, ALL EXAMPLES must be in English
 
@@ -136,7 +172,7 @@ EXAMPLES GUIDELINE:
 
 LANGUAGE RULES:
 - Match the user's language: if they ask in English, respond in English; if in Chinese, respond in Chinese
-- For Chinese: detect whether it's Traditional (繁體) or Simplified (简体) and respond accordingly
+- For Chinese: detect whether it's Traditional (繁體) or Simplified (簡體) and respond accordingly
 - If unclear, default to English
 - IMPORTANT: Regardless of response language, ALL EXAMPLES must be in English`;
 };
@@ -144,14 +180,17 @@ LANGUAGE RULES:
 export async function POST(request: NextRequest) {
   try {
     const { messages, context, sessionId } = await request.json();
-    const cachedContext = sessionId ? contextCache.get(sessionId) : undefined;
+    const cachedContext = sessionId ? getContext(sessionId) : undefined;
     const activeContext = context ?? cachedContext;
 
     if (context && sessionId) {
-      contextCache.set(sessionId, context);
+      setContext(sessionId, context);
     }
 
     const systemPrompt = activeContext ? buildSystemPrompt(activeContext) : DEFAULT_SYSTEM_PROMPT;
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30_000);
 
     const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
       method: 'POST',
@@ -169,7 +208,10 @@ export async function POST(request: NextRequest) {
         max_tokens: 2000,
         stream: true,
       }),
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       throw new Error(`DeepSeek API error: ${response.statusText}`);

@@ -73,6 +73,7 @@ export function LessonPoster({
   };
 
   const generatePoster = async (signal: AbortSignal) => {
+    if (signal.aborted) return; // Guard: short-circuit if already aborted (React 19 double-invoke)
     setIsGenerating(true);
     setError(null);
 
@@ -91,6 +92,9 @@ export function LessonPoster({
       });
 
       const data = await response.json();
+
+      // Don't update state if this request was aborted while awaiting
+      if (signal.aborted) return;
 
       if (!response.ok) {
         throw new Error(data.error || "Failed to generate poster");
@@ -113,8 +117,16 @@ export function LessonPoster({
       );
       onPosterGenerated?.(data.imageUrl);
     } catch (err) {
-      // Silently ignore aborted requests
-      if (signal.aborted) return;
+      // Distinguish AbortError (from React 19 double-invoke / cleanup) from real errors.
+      // AbortError has name "AbortError" or code "ERR_ABORTED".
+      const isAbort =
+        err instanceof Error &&
+        (err.name === "AbortError" ||
+          (err as unknown as { code?: string }).code === "ERR_ABORTED");
+
+      if (isAbort) return; // Silent — expected during cleanup or double-invoke
+
+      if (signal.aborted) return; // Safety net
 
       const errorMessage =
         err instanceof Error ? err.message : "Failed to generate poster";

@@ -25,13 +25,27 @@ export function PosterCard({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Get saved poster from localStorage
     const savedPoster = localStorage.getItem(`poster_${lessonId}`);
     if (savedPoster) {
-      setPosterUrl(savedPoster);
+      // Support both old plain-URL format and new JSON format from LessonPoster
+      let url: string | null = null;
+      if (savedPoster.startsWith('{')) {
+        try {
+          const parsed = JSON.parse(savedPoster) as { url?: unknown; timestamp?: number };
+          if (typeof parsed.url === 'string' && parsed.url.startsWith('https://')) {
+            url = parsed.url;
+          }
+        } catch {
+          // Invalid JSON, fall through to plain URL
+        }
+      } else if (savedPoster.startsWith('https://')) {
+        url = savedPoster;
+      }
+      if (url) {
+        setPosterUrl(url);
+      }
       setIsLoading(false);
     } else if (collected) {
-      // Regenerate if collected but no poster exists
       generatePoster();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -55,7 +69,10 @@ export function PosterCard({
       const data = await response.json();
       if (data.imageUrl) {
         setPosterUrl(data.imageUrl);
-        localStorage.setItem(`poster_${lessonId}`, data.imageUrl);
+        localStorage.setItem(
+          `poster_${lessonId}`,
+          JSON.stringify({ url: data.imageUrl, timestamp: Date.now() })
+        );
       }
     } catch (error) {
       console.error("Failed to generate poster:", error);

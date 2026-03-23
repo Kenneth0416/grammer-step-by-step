@@ -16,31 +16,31 @@ const RATE_LIMIT_MAX = 10;
 const rateLimitStore = new Map<string, number[]>();
 let apiKeyIndex = 0;
 
-const EVALUATION_SYSTEM_PROMPT = `你是一位专业的英语语法评分老师。根据学生的写作内容，从以下四个维度进行评估：
-1. Singular/Plural forms (单复数形式)
-2. Countable/Uncountable nouns (可数不可数名词)
-3. Articles (冠词 a/an/the)
-4. Sentence structure (句子结构)
+const EVALUATION_SYSTEM_PROMPT = `你是一位專業的英語語法評分老師。根據學生的寫作內容，從以下四個維度進行評估：
+1. Singular/Plural forms (單複數形式)
+2. Countable/Uncountable nouns (可數不可數名詞)
+3. Articles (冠詞 a/an/the)
+4. Sentence structure (句子結構)
 
-评分标准（Level 1-5）：
-- Level 5 (Excellent Control): 完美运用所有语法点，几乎无错误
-- Level 4 (Good Control): 基本正确，偶有小错误但不影响理解
-- Level 3 (Fair Control): 有明显错误但基本意思清楚
-- Level 2 (Limited Control): 频繁错误，影响理解
-- Level 1 (Minimal Control): 基本无法正确运用语法点
+評分標準（Level 1-5）：
+- Level 5 (Excellent Control): 完美運用所有語法點，幾乎無錯誤
+- Level 4 (Good Control): 基本正確，偶有小錯誤但不影響理解
+- Level 3 (Fair Control): 有明顯錯誤但基本意思清楚
+- Level 2 (Limited Control): 頻繁錯誤，影響理解
+- Level 1 (Minimal Control): 基本無法正確運用語法點
 
-请返回 JSON 格式的评估结果，包含：
+請返回 JSON 格式的評估結果，包含：
 {
-  "level": 数字(1-5),
+  "level": 數字(1-5),
   "score": "Level X - 描述",
-  "strengths": ["优点1", "优点2"],
-  "improvements": ["改进建议1", "改进建议2"],
-  "detailedFeedback": "详细的综合评语段落",
+  "strengths": ["優點1", "優點2"],
+  "improvements": ["改進建議1", "改進建議2"],
+  "detailedFeedback": "詳細的綜合評語段落",
   "grammarAnalysis": {
-    "singularPlural": "单复数使用的具体评价",
-    "countableUncountable": "可数不可数使用的具体评价",
-    "articles": "冠词使用的具体评价",
-    "sentenceStructure": "句子结构的具体评价"
+    "singularPlural": "單複數使用的具體評價",
+    "countableUncountable": "可數不可數使用的具體評價",
+    "articles": "冠詞使用的具體評價",
+    "sentenceStructure": "句子結構的具體評價"
   }
 }`;
 
@@ -192,16 +192,19 @@ export async function POST(request: NextRequest) {
     const writingContent = validateWritingContent(body.writingContent);
     const lessonContext = validateLessonContext(body.lessonContext);
 
-    const userPrompt = `课程信息：
+    const userPrompt = `課程資訊：
 - Level: ${lessonContext?.level || '1D'}
 - Title: ${lessonContext?.title || 'Writing Workshop'}
-- 写作要求：
-${lessonContext?.requirements?.map((r: string, i: number) => `${i + 1}. ${r}`).join('\n') || '无具体要求'}
+- 寫作要求：
+${lessonContext?.requirements?.map((r: string, i: number) => `${i + 1}. ${r}`).join('\n') || '無具體要求'}
 
-学生写作内容：
+學生寫作內容：
 ${writingContent}
 
-请根据评分标准对这篇写作进行评估，返回 JSON 格式的结果。`;
+請根據評分標準對這篇寫作進行評估，返回 JSON 格式的結果。`;
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30_000);
 
     const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
       method: 'POST',
@@ -219,7 +222,10 @@ ${writingContent}
         max_tokens: 2000,
         response_format: { type: 'json_object' }
       }),
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       console.error('DeepSeek API error:', response.status, response.statusText, await response.text());
@@ -257,6 +263,14 @@ ${writingContent}
     return NextResponse.json(evaluationResult);
 
   } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      console.error('Evaluation API timeout after 30s');
+      return NextResponse.json(
+        { error: 'Request timed out.', details: 'AI service did not respond within 30 seconds.' },
+        { status: 504 }
+      );
+    }
+
     const apiError = error as ApiError;
     if (apiError instanceof ApiError) {
       return NextResponse.json(
