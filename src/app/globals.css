@@ -1,55 +1,65 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
-  /* ===== Scheme A: Modern Academic Style ===== */
-  /* Primary - Academic Blue: Professional & Trustworthy */
-  --academic-blue: #4F46E5;
-  --academic-blue-light: #818CF8;
-  --academic-blue-dark: #3730A3;
+  /* ===== GRAMMAI PEN 品牌色 ===== */
+  /* Primary - Yellow: 主要按钮/成就 */
+  --primary: #FCC30A;
+  --primary-light: #FCD34D;
+  --primary-dark: #E6A800;
 
-  /* Secondary - Sky Light: Open & Friendly */
-  --sky-light: #0EA5E9;
-  --sky-light-light: #38BDF8;
+  /* Accent - Coral Red: 强调/危险 */
+  --accent: #FC5B5B;
+  --accent-light: #FF8A80;
+  --accent-dark: #E04040;
 
-  /* Accent - Achievement Gold: Rewards & Achievement */
-  --achievement-gold: #F59E0B;
-  --achievement-gold-light: #FCD34D;
-  --achievement-gold-dark: #D97706;
+  /* Secondary - Sky Blue: 次要元素 */
+  --secondary: #33CAF5;
+  --secondary-light: #4FC3F7;
+  --secondary-dark: #039BE5;
 
-  /* Success - Progress Green: Learning Progress */
-  --progress-green: #10B981;
-  --progress-green-light: #34D399;
+  /* Success - Progress Green: 学习进度 */
+  --success: #10B981;
+  --success-light: #34D399;
 
-  /* Background System - Clean & Modern */
-  --bg-primary: #FAFAFA;
-  --bg-secondary: #F1F5F9;
-  --bg-tertiary: #E2E8F0;
+  /* Background System - Warm & Friendly */
+  --bg-primary: #FFFBF5;
+  --bg-secondary: #FFF8E7;
+  --bg-tertiary: #F5EDD8;
 
   /* Text System - Dark Gray-Blue */
   --text-primary: #1E293B;
   --text-secondary: #64748B;
   --text-tertiary: #94A3B8;
 
-  /* Classic Adventure Colors (for card categories) */
-  --noun-brown: #8B6914;
-  --article-green: #228B22;
-  --plural-blue: #4169E1;
-  --countable-purple: #8B4789;
-  --writing-pink: #DB2777;
+  /* Learning Card Categories */
+  --noun-brown: #FCC30A;
+  --article-green: #FC5B5B;
+  --plural-blue: #33CAF5;
+  --countable-purple: #10B981;
+  --writing-pink: #FC5B5B;
 
-  /* Legacy Variable Mapping for Compatibility */
-  --primary: var(--academic-blue);
-  --gold-primary: var(--achievement-gold);
-  --gold-light: var(--achievement-gold-light);
-  --gold-dark: var(--achievement-gold-dark);
+  /* Legacy Variable Mapping */
+  --gold-primary: var(--primary);
+  --gold-light: var(--primary-light);
+  --gold-dark: var(--primary-dark);
+  --academic-blue: var(--secondary);
+  --academic-blue-light: var(--secondary-light);
+  --academic-blue-dark: var(--secondary-dark);
+  --sky-light: var(--secondary);
+  --sky-light-light: var(--secondary-light);
+  --achievement-gold: var(--primary);
+  --achievement-gold-light: var(--primary-light);
+  --achievement-gold-dark: var(--primary-dark);
+  --progress-green: var(--success);
+  --progress-green-light: var(--success-light);
   --parchment: var(--bg-primary);
   --parchment-dark: var(--bg-secondary);
   --ink-brown: var(--text-primary);
   --ink-black: var(--text-primary);
-  --forest-green: var(--progress-green);
-  --grass-green: var(--progress-green-light);
-  --gold-medal: var(--achievement-gold);
+  --forest-green: var(--success);
+  --grass-green: var(--success-light);
+  --gold-medal: var(--primary);
 
   --background: var(--bg-primary);
   --foreground: var(--text-primary);
@@ -104,7 +114,7 @@
   --color-foreground: var(--text-primary);
 
   --font-display: 'Cinzel', serif;
-  --font-body: 'Crimson Text', Georgia, serif;
+  --font-body: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 * {
@@ -118,14 +128,23 @@ html {
 body {
   background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
   color: var(--text-primary);
-  font-family: 'Crimson Text', Georgia, serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   min-height: 100vh;
   /* Subtle grid background instead of parchment texture */
   background-image:
     linear-gradient(rgba(79, 70, 229, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(79, 70, 229, 0.03) 1px, transparent 1px);
   background-size: 40px 40px, 40px 40px;
+  /* Safe area padding for iPhone notch and home indicator */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
 }
+
+/* Safe area utility classes */
+.pt-safe { padding-top: env(safe-area-inset-top); }
+.pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+.mt-safe { margin-top: env(safe-area-inset-top); }
+.mb-safe { margin-bottom: env(safe-area-inset-bottom); }
 
 /* Typography */
 .font-display {
@@ -133,10 +152,11 @@ body {
 }
 
 .font-body {
-  font-family: 'Crimson Text', Georgia, serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 /* ===== Modern Glassmorphism Effect ===== */
+/* Mobile: reduce blur for performance */
 .glass-card {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);
@@ -145,6 +165,13 @@ body {
   box-shadow:
     0 4px 24px rgba(0, 0, 0, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+@media (max-width: 640px) {
+  .glass-card {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
 }
 
 .glass-card-elevated {
@@ -156,6 +183,13 @@ body {
     0 8px 32px rgba(79, 70, 229, 0.08),
     0 2px 8px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+@media (max-width: 640px) {
+  .glass-card-elevated {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
 }
 
 /* ===== Decorative Border (Modern Version) ===== */
@@ -334,6 +368,15 @@ body {
   font-weight: 700;
   font-size: 1.5rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Mobile: reduce size to 60px */
+@media (max-width: 640px) {
+  .stage-marker {
+    width: 60px;
+    height: 60px;
+    font-size: 1.2rem;
+  }
 }
 
 .stage-marker.locked {
@@ -892,4 +935,90 @@ body {
 
 .animation-delay-300 {
   animation-delay: 300ms;
+}
+
+/* ===== Details / Collapsible ===== */
+details[open] .details-chevron {
+  transform: rotate(180deg);
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* ===== Mobile Animation Optimizations ===== */
+@media (max-width: 640px) {
+  /* Disable heavy animations on mobile for performance */
+  .float {
+    animation: none;
+  }
+
+  .particles {
+    display: none;
+  }
+
+  .compass {
+    display: none;
+  }
+
+  .compass-direction::before {
+    animation: none;
+  }
+
+  .badge-pulse {
+    animation: none;
+  }
+
+  .badge-shine {
+    animation: none;
+  }
+
+  /* Reduce glow effects on mobile */
+  .glow-gold {
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+  }
+
+  .glow-blue {
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+  }
+
+  .glow-green {
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+  }
+
+  /* Simplify glow-card effect on mobile */
+  .glow-card::before {
+    display: none;
+  }
+
+  .glow-card:hover::before {
+    display: none;
+  }
+
+  .glow-card:hover {
+    transform: none;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
+  }
+
+  /* Reduce grammar card hover effect */
+  .grammar-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  }
+}
+
+/* Respect user's reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .float,
+  .particles,
+  .particle,
+  .badge-pulse,
+  .sparkle::after,
+  .compass-direction::before,
+  .animate-fade-in-up,
+  .loading-ring,
+  .badge-shine,
+  .gradient-rotate {
+    animation: none;
+  }
 }
