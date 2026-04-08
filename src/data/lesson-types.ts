@@ -5,7 +5,12 @@ export type LessonUnitType =
   | "practice"
   | "quiz"
   | "warmup"
-  | "activity";
+  | "activity"
+  | "get-ready"       // Tab 1: Get Ready! — goal selection + mission
+  | "try-it-out"      // Tab 2: Try it Out! — noun definition + types + AI questions
+  | "practice-ai"     // Tab 3: Practise with a Pro! — AI MCQ practice with hints
+  | "produce"         // Tab 4: Let's Produce! — AI writing tasks with hints
+  | "review";        // Tab 6: Check & Think — reflection + next lesson
 
 export type PedagogyStage =
   | "warmup"
@@ -48,6 +53,7 @@ export interface LessonQuestion {
   correctAnswer: string;
   explanation: string;
   caseSensitive?: boolean;
+  difficulty?: "easy" | "medium" | "hard"; // For AI practice tabs (Tabs 3 & 4)
 }
 
 export interface RuleWithExamples {
@@ -128,6 +134,13 @@ export interface LessonUnit {
     explanation: string;
     rules?: string[];
     tips?: string[];
+    // Tab 1 — Get Ready!
+    mission?: string;
+    goalOptions?: Record<string, unknown>[];
+    // Tab 6 — Check & Think
+    canDoStatements?: string[];
+    reflectionOptions?: string[];
+    nextSteps?: Record<string, unknown>[];
   };
   examples?: LessonExample[];
   questions?: LessonQuestion[];

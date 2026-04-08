@@ -45,188 +45,253 @@ export const lessons: Lesson[] = [
     level: "1A",
     title: "Nouns",
     titleCn: "The Noun Adventure",
-    description: "Build noun meaning through movement, discovery, classification, and sentence production.",
-    descriptionCn: "透過動作、發現和分類建立名詞概念。",
+    description: "Follow the 6-step journey: set your goal, discover nouns, practise with AI, write, quiz, and reflect.",
+    descriptionCn: "嚴格按照六步流程：設定目標、探索名詞、AI練習、寫作、測驗、回顧。",
     color: "noun-brown",
     cards: 12,
     xpReward: 100,
     units: [
+      // ── TAB 1: Get Ready! ──────────────────────────────────────────────────
       {
         id: "unit-1",
-        title: "Warm-up - I Spy Game",
-        titleCn: "熱身：I Spy 遊戲",
-        type: "warmup",
+        title: "Get Ready!",
+        titleCn: "準備出發！",
+        type: "get-ready",
         stage: "warmup",
-        duration: "5 min",
+        duration: "3 min",
         learningObjectives: [
-          { title: "Notice naming words in the classroom", icon: "👀" },
-          { title: "Respond physically before speaking", icon: "🖐️" }
+          { title: "Understand today's mission", icon: "🎯" },
+          { title: "Choose a personal focus area", icon: "⚡" },
         ],
         content: {
-          explanation: "Students begin with meaningful classroom clues. They move first, then say the noun they found.",
-          tips: ["Keep the pace quick so students rely on meaning, not translation."]
+          explanation: "Students set their personal learning goal from 4 options, personalising the AI tutor hints throughout the lesson.",
+          tips: ["Allow students to change their focus at any time during the lesson."],
         },
-        teacherScript: nounAdventureScripts.warmup,
-        activity: nounISpyActivity,
-        examples: [
-          { sentence: "It is a book.", translation: "它是一本書。", highlight: "book" },
-          { sentence: "That is the teacher.", translation: "那是老師。", highlight: "teacher" }
-        ]
       },
+      // ── TAB 2: Try it Out! ─────────────────────────────────────────────────
       {
         id: "unit-2",
-        title: "Presentation - What is a Noun?",
-        titleCn: "呈現：什麼是名詞？",
-        type: "activity",
+        title: "Try it Out!",
+        titleCn: "探索名詞！",
+        type: "try-it-out",
         stage: "presentation",
         duration: "10 min",
         learningObjectives: [
-          { title: "Understand the meaning of noun", icon: "🎯" },
-          { title: "Connect noun groups to TPR actions", icon: "🕺" }
+          { title: "Understand what a noun is", icon: "📖" },
+          { title: "Identify four noun types", icon: "🗂️" },
+          { title: "Tell common nouns from proper nouns", icon: "⚖️" },
         ],
         content: {
-          explanation: "A noun is a naming word. It can name a person, place, thing, or idea. Students attach each category to a clear action.",
+          explanation: "Students discover what nouns are, explore the four noun types (people, places, things, ideas), and learn the difference between common and proper nouns through interactive examples and AI-guided questions.",
           rules: [
             "noun = naming word",
-            "person, place, thing, idea are all noun groups"
+            "People, places, things, ideas are all noun groups",
+            "Common nouns are general names — lowercase",
+            "Proper nouns are special names — capital letters",
           ],
-          tips: ["Model the gesture first, then say the noun group clearly."]
+          tips: [
+            "Use Who is it? What is it? as the key AI prompts",
+            "Return to the people/places/things/ideas grid after each noun type",
+            "Use paired examples (city / Hong Kong) to make the common/proper contrast concrete",
+          ],
         },
-        teacherScript: nounAdventureScripts.presentation,
-        activity: nounTprActivity,
         rulesWithExamples: [
           {
             rule: "Nouns name people",
             category: "core",
-            mnemonic: "Who is it? That answer is often a noun.",
+            mnemonic: "Who is it? That answer is a noun.",
             examples: [
               { sentence: "teacher", translation: "老師", highlight: "teacher" },
-              { sentence: "doctor", translation: "醫生", highlight: "doctor" }
-            ]
+              { sentence: "student", translation: "學生", highlight: "student" },
+            ],
           },
           {
-            rule: "Nouns name places and things",
+            rule: "Nouns name places",
             category: "core",
+            mnemonic: "Where is it? That answer is a noun.",
             examples: [
-              { sentence: "school, park", translation: "學校，公園", highlight: "school, park" },
-              { sentence: "book, pencil", translation: "書，鉛筆", highlight: "book, pencil" }
-            ]
+              { sentence: "school", translation: "學校", highlight: "school" },
+              { sentence: "classroom", translation: "課室", highlight: "classroom" },
+            ],
           },
           {
-            rule: "Some nouns name ideas",
+            rule: "Nouns name things",
+            category: "core",
+            mnemonic: "What is it? That answer is a noun.",
+            examples: [
+              { sentence: "book", translation: "書", highlight: "book" },
+              { sentence: "desk", translation: "桌子", highlight: "desk" },
+            ],
+          },
+          {
+            rule: "Nouns name ideas",
             category: "special",
-            mnemonic: "You cannot touch an idea, but you can name it.",
+            mnemonic: "You can name it, but you cannot touch it.",
             examples: [
-              { sentence: "love, joy", translation: "愛，快樂", highlight: "love, joy" }
-            ]
-          }
-        ]
-      },
-      {
-        id: "unit-3",
-        title: "Discovery - People, Places, Things, Ideas",
-        titleCn: "發現：人物、地點、事物、想法",
-        type: "activity",
-        stage: "discovery",
-        duration: "10 min",
-        learningObjectives: [
-          { title: "Sort nouns by meaning", icon: "🗂️" },
-          { title: "Explain category choices", icon: "💬" }
-        ],
-        content: {
-          explanation: "Students discover the four noun groups by sorting examples and explaining their reasoning.",
-          tips: ["Prompt with why questions so students verbalize the pattern."]
-        },
-        teacherScript: nounAdventureScripts.discovery,
-        activity: nounDiscoveryActivity,
-        rulesWithExamples: [
-          {
-            rule: "People nouns answer who",
-            category: "core",
-            examples: [
-              { sentence: "mother, teacher, friend", translation: "媽媽，老師，朋友", highlight: "mother, teacher, friend" }
-            ]
+              { sentence: "happiness", translation: "快樂", highlight: "happiness" },
+              { sentence: "love", translation: "愛", highlight: "love" },
+            ],
           },
           {
-            rule: "Place and thing nouns answer where or what",
+            rule: "Common nouns are general — no capital letter",
             category: "core",
+            mnemonic: "General = common = lowercase",
             examples: [
-              { sentence: "library, city, desk, ball", translation: "圖書馆，城市，桌子，球", highlight: "library, city, desk, ball" }
-            ]
+              { sentence: "city, teacher, dog", translation: "城市，老師，狗", highlight: "city, teacher, dog" },
+            ],
           },
           {
-            rule: "Idea nouns cannot be touched",
-            category: "special",
-            examples: [
-              { sentence: "kindness, hope, music", translation: "善良，希望，音樂", highlight: "kindness, hope, music" }
-            ]
-          }
-        ]
-      },
-      {
-        id: "unit-4",
-        title: "Guided Practice - Common vs Proper",
-        titleCn: "指導練習：普通名詞與專有名詞",
-        type: "activity",
-        stage: "guided-practice",
-        duration: "10 min",
-        learningObjectives: [
-          { title: "Tell general nouns from special names", icon: "🏷️" },
-          { title: "Capitalize proper nouns", icon: "🔠" }
-        ],
-        content: {
-          explanation: "Students sort nouns into common and proper categories with teacher guidance and immediate feedback.",
-          rules: [
-            "common noun = general person, place, or thing",
-            "proper noun = special name and starts with a capital letter"
-          ],
-          tips: ["Use paired examples such as city / Shanghai to keep the contrast concrete."]
-        },
-        teacherScript: nounAdventureScripts.guidedPractice,
-        activity: nounClassificationActivity,
-        rulesWithExamples: [
-          {
-            rule: "Common nouns are general words",
-            category: "core",
-            mnemonic: "General = common",
-            examples: [
-              { sentence: "city, teacher, dog", translation: "城市，老師，狗", highlight: "city, teacher, dog" }
-            ]
-          },
-          {
-            rule: "Proper nouns are special names",
+            rule: "Proper nouns are special names — capital letter",
             category: "core",
             mnemonic: "Special name = capital letter",
             examples: [
-              { sentence: "Shanghai, Ms. Wang, China", translation: "上海，王老師，中國", highlight: "Shanghai, Ms. Wang, China" }
-            ]
-          }
-        ]
+              { sentence: "Hong Kong, Miss Chan, Asia, Monday", translation: "香港，陳老師，亞洲，星期一", highlight: "Hong Kong, Miss Chan, Asia, Monday" },
+            ],
+          },
+        ],
+        examples: [
+          { sentence: "The teacher is kind.", translation: "老師很善良。", highlight: "teacher" },
+          { sentence: "I live in Japan.", translation: "我住在日本。", highlight: "Japan" },
+          { sentence: "I love Monday!", translation: "我喜歡星期一！", highlight: "Monday" },
+        ],
       },
+      // ── TAB 3: Practise with a Pro! ───────────────────────────────────────
       {
-        id: "unit-5",
-        title: "Production - Use Nouns in Sentences",
-        titleCn: "輸出：用名詞造句",
-        type: "activity",
+        id: "unit-3",
+        title: "Practise with a Pro!",
+        titleCn: "與 AI 導師練習！",
+        type: "practice-ai",
+        stage: "guided-practice",
+        duration: "8 min",
+        learningObjectives: [
+          { title: "Identify nouns in sentences", icon: "🔍" },
+          { title: "Classify noun types", icon: "🗂️" },
+          { title: "Apply capital letter rules", icon: "🔠" },
+        ],
+        content: {
+          explanation: "AI-powered MCQ practice with personalised hints. Students choose their difficulty and receive AI coaching — not direct answers — to guide their thinking.",
+          tips: ["Encourage students to use Get AI Hint before giving up."],
+        },
+        questions: [
+          {
+            id: "p1", type: "multiple", difficulty: "easy",
+            question: "Which word is a noun?",
+            questionCn: "哪個詞是名詞？",
+            options: ["run", "happy", "teacher", "quickly"],
+            correctAnswer: "teacher",
+            explanation: "Teacher is a noun because it names a person. Run is a verb, happy is an adjective, quickly is an adverb.",
+          },
+          {
+            id: "p2", type: "multiple", difficulty: "easy",
+            question: 'What type of noun is "school"?',
+            questionCn: '"學校" 是什麼類型的名詞？',
+            options: ["People", "Places", "Things", "Ideas"],
+            correctAnswer: "Places",
+            explanation: "School names a place — where you learn.",
+          },
+          {
+            id: "p3", type: "multiple", difficulty: "easy",
+            question: "Which is a proper noun?",
+            questionCn: "哪個是專有名詞？",
+            options: ["city", "teacher", "Monday", "book"],
+            correctAnswer: "Monday",
+            explanation: "Monday is a special name — a day of the week — so it starts with a capital letter.",
+          },
+          {
+            id: "p4", type: "multiple", difficulty: "medium",
+            question: 'What type of noun is "happiness"?',
+            questionCn: '"快樂" 是什麼類型的名詞？',
+            options: ["People", "Places", "Things", "Ideas"],
+            correctAnswer: "Ideas",
+            explanation: "Happiness is an idea noun. You can feel it or think about it, but you cannot touch it.",
+          },
+          {
+            id: "p5", type: "multiple", difficulty: "medium",
+            question: "Choose the correct sentence:",
+            questionCn: "選擇正確的句子：",
+            options: ["I go to school in japan.", "I go to school in Japan.", "I go to School in Japan.", "I Go to school in Japan."],
+            correctAnswer: "I go to school in Japan.",
+            explanation: "Japan is a proper noun (capital letter). school is a common noun (lowercase).",
+          },
+          {
+            id: "p6", type: "multiple", difficulty: "medium",
+            question: 'How many nouns are in: "The dog plays in the park."',
+            questionCn: '句子中有多少個名詞："The dog plays in the park."',
+            options: ["1", "2", "3", "4"],
+            correctAnswer: "2",
+            explanation: "Dog and park are nouns. The is an article, plays is a verb, in is a preposition.",
+          },
+          {
+            id: "p7", type: "multiple", difficulty: "hard",
+            question: '"Love" is a noun because:',
+            questionCn: '"愛" 是名詞，因為：',
+            options: [
+              "You can hold it in your hand",
+              "It names a feeling you can think about",
+              "It starts with a capital letter",
+              "It always has plural form",
+            ],
+            correctAnswer: "It names a feeling you can think about",
+            explanation: "Love is an idea noun. You cannot touch it, but you can name it and feel it. That makes it a noun.",
+          },
+          {
+            id: "p8", type: "multiple", difficulty: "hard",
+            question: "Which sentence uses ALL four noun types correctly?",
+            questionCn: "哪個句子正確使用了所有四種名詞類型？",
+            options: [
+              "Ms. Lee teaches students about love in Hong Kong.",
+              "ms. Lee teaches students about love in hong kong.",
+              "Ms. Lee teaches about love in hong kong.",
+              "Ms. Lee teaches students about Love in Hong Kong.",
+            ],
+            correctAnswer: "Ms. Lee teaches students about love in Hong Kong.",
+            explanation: "Ms. Lee (proper noun - person), students (common noun - people), love (idea noun), Hong Kong (proper noun - place).",
+          },
+        ],
+      },
+      // ── TAB 4: Let's Produce! ──────────────────────────────────────────────
+      {
+        id: "unit-4",
+        title: "Let's Produce!",
+        titleCn: "創意輸出！",
+        type: "produce",
         stage: "production",
         duration: "8 min",
         learningObjectives: [
           { title: "Use nouns in original sentences", icon: "✍️" },
-          { title: "Edit capitalization independently", icon: "✅" }
+          { title: "Write with both common and proper nouns", icon: "⚖️" },
         ],
         content: {
-          explanation: "Students combine noun cards into simple original sentences and refine them with a partner.",
-          tips: ["Offer one sentence frame, then invite students to leave the frame when ready."]
+          explanation: "AI-guided writing tasks from easy to difficult. Students write sentences using nouns they have learned, with AI coaching at each step.",
+          tips: ["Start with sentence frames for reluctant writers."],
         },
-        teacherScript: nounAdventureScripts.production,
-        activity: nounSentenceActivity,
-        examples: [
-          { sentence: "Amy reads a book in Beijing.", translation: "Amy 在北京讀書。", highlight: "Amy, book, Beijing" },
-          { sentence: "The teacher visits the park.", translation: "老師去公園。", highlight: "teacher, park" }
-        ]
+        questions: [
+          {
+            id: "w1", type: "fill", difficulty: "easy",
+            question: 'Write 2 sentences. Use ONE proper noun (a name or special place with a capital letter). Example: "Amy reads in Hong Kong."',
+            questionCn: "寫 2 個句子。使用一個專有名詞（名字或特殊地名，首字母要大寫）。例如：Amy reads in Hong Kong.",
+            correctAnswer: "",
+            explanation: "Remember: names like Amy, Hong Kong, and Monday always start with capital letters!",
+          },
+          {
+            id: "w2", type: "fill", difficulty: "medium",
+            question: 'Write 3 sentences. Use ONE noun from EACH group: people, places, things. Example: "The teacher works in the school with books."',
+            questionCn: "寫 3 個句子。每組（人物、地點、事物）各用一個名詞。例如：The teacher works in the school with books.",
+            correctAnswer: "",
+            explanation: "Try using different nouns each time — teacher, park, desk, friend, classroom...",
+          },
+          {
+            id: "w3", type: "fill", difficulty: "hard",
+            question: 'Write 4 sentences about a person. Include: a proper noun (name), a common noun for a person, a common noun for a place, and an idea noun (like love, happiness, music).',
+            questionCn: "寫 4 個關於一個人的句子。包括：一個專有名詞（名字）、一個表示人物 的普通名詞、一個表示地點的普通名詞、和一個概念名詞（如愛、快樂、音樂）。",
+            correctAnswer: "",
+            explanation: "Challenge: try using all four noun types in one short paragraph!",
+          },
+        ],
       },
+      // ── TAB 5: Quiz ────────────────────────────────────────────────────────
       {
-        id: "unit-6",
+        id: "unit-5",
         title: "Quiz",
         titleCn: "測驗",
         type: "quiz",
@@ -234,45 +299,75 @@ export const lessons: Lesson[] = [
         duration: "7 min",
         questions: [
           {
-            id: "q1",
-            type: "multiple",
-            question: "Which word is a noun idea?",
-            questionCn: "哪個詞是表示想法的名詞？",
-            options: ["desk", "teacher", "love", "park"],
-            correctAnswer: "love",
-            explanation: "Love is an idea noun because you can name it, but you cannot touch it."
+            id: "q1", type: "multiple",
+            question: "Which word is a noun?",
+            questionCn: "哪個詞是名詞？",
+            options: ["beautiful", "teacher", "quickly", "run"],
+            correctAnswer: "teacher",
+            explanation: "Teacher is a noun — it names a person. Beautiful is an adjective, quickly is an adverb, run is a verb.",
           },
           {
-            id: "q2",
-            type: "multiple",
-            question: "Which word is a proper noun?",
-            questionCn: "哪個詞是專有名詞？",
+            id: "q2", type: "multiple",
+            question: 'What type of noun is "love"?',
+            questionCn: '"愛" 是什麼類型的名詞？',
+            options: ["People", "Places", "Things", "Ideas"],
+            correctAnswer: "Ideas",
+            explanation: "Love is an idea noun — you can feel it and name it, but you cannot touch it.",
+          },
+          {
+            id: "q3", type: "multiple",
+            question: "Which is a proper noun?",
+            questionCn: "哪個是專有名詞？",
             options: ["city", "book", "London", "teacher"],
             correctAnswer: "London",
-            explanation: "London is a specific place name, so it is a proper noun."
+            explanation: "London is a specific place name, so it is a proper noun and starts with a capital letter.",
           },
           {
-            id: "q3",
-            type: "multiple",
-            question: "Choose the best sentence.",
-            questionCn: "选择正確的句子。",
+            id: "q4", type: "multiple",
+            question: "Choose the correct sentence:",
+            questionCn: "選擇正確的句子：",
             options: ["amy visits the park.", "Amy visits the park.", "Amy visits Park.", "amy visits Park."],
             correctAnswer: "Amy visits the park.",
-            explanation: "Amy is a proper noun, so it needs a capital letter. Park is common here, so it stays lowercase."
+            explanation: "Amy is a proper noun (name), so it needs a capital letter. Park is a common noun here, so it stays lowercase.",
           },
           {
-            id: "q4",
-            type: "fill",
+            id: "q5", type: "fill",
             question: 'Complete: "____ is my teacher. (mr. lee / Mr. Lee)"',
             questionCn: "完成句子。",
             correctAnswer: "Mr. Lee",
-            explanation: "A person's special name is a proper noun and begins with capitals.",
-            caseSensitive: true
-          }
-        ]
-      }
-    ]
+            explanation: "A persons special name is a proper noun and begins with capitals.",
+            caseSensitive: true,
+          },
+          {
+            id: "q6", type: "multiple",
+            question: 'How many nouns: "The student reads a book in the library."',
+            questionCn: '有多少個名詞："The student reads a book in the library."',
+            options: ["1", "2", "3", "4"],
+            correctAnswer: "3",
+            explanation: "Student, book, and library are all nouns. The is an article, reads is a verb, in is a preposition.",
+          },
+        ],
+      },
+      // ── TAB 6: Check & Think ───────────────────────────────────────────────
+      {
+        id: "unit-6",
+        title: "Check & Think",
+        titleCn: "回顧與反思",
+        type: "review",
+        stage: "assessment",
+        duration: "3 min",
+        learningObjectives: [
+          { title: "Reflect on today's learning", icon: "🤔" },
+          { title: "Choose next steps", icon: "🎯" },
+        ],
+        content: {
+          explanation: "Students review what they learned, reflect on their strengths, and choose their next learning step.",
+          tips: ["Celebrate every checkbox — all four skills matter."],
+        },
+      },
+    ],
   },
+
   {
     id: "1b",
     level: "1B",

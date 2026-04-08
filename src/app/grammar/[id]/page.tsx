@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { getLesson, LessonUnit } from "@/data/lessons";
 import { LessonPoster } from "@/components/LessonPoster";
 import { VideoUnit } from "@/components/VideoUnit";
-import { Chatbot } from "@/components/Chatbot";
+import { Chatbot, ChatbotHandle } from "@/components/Chatbot";
 import { WritingEvaluation } from "@/components/WritingEvaluation";
 import { EvaluationResult } from "@/types/evaluation";
 import { RuleCard } from "@/components/RuleCard";
@@ -14,6 +14,11 @@ import { LearningObjectives } from "@/components/LearningObjectives";
 import { ActivityUnit } from "@/components/ActivityUnit";
 import { WarmupActivity } from "@/components/WarmupActivity";
 import { Navigation } from "@/components/Navigation";
+import { GetReadyUnit } from "@/components/GetReadyUnit";
+import { TryItOutUnit } from "@/components/TryItOutUnit";
+import { PracticeUnit } from "@/components/PracticeUnit";
+import { ProduceUnit } from "@/components/ProduceUnit";
+import { CheckThinkUnit } from "@/components/CheckThinkUnit";
 
 const MAX_WRITING_LENGTH = 2000;
 const MIN_WRITING_LENGTH = 10;
@@ -485,6 +490,7 @@ export default function LessonDetailPage() {
 
   // Get saved avatar from localStorage
   const [characterAvatar, setCharacterAvatar] = useState<string>('🧙‍♂️');
+  const chatbotRef = useRef<ChatbotHandle>(null);
 
   useEffect(() => {
     const savedAvatar = localStorage.getItem('characterAvatar');
@@ -889,6 +895,41 @@ export default function LessonDetailPage() {
                     {currentUnit < lesson.units.length - 1 ? 'Continue →' : 'Complete Lesson'}
                   </button>
                 </>
+              ) : activeUnit.type === 'get-ready' ? (
+                <GetReadyUnit unit={activeUnit} onStart={handleUnitComplete} />
+              ) : activeUnit.type === 'try-it-out' ? (
+                <>
+                  <TryItOutUnit unit={activeUnit} />
+                  <button
+                    onClick={handleUnitComplete}
+                    className="w-full py-3 rounded-lg font-display font-semibold bg-gradient-to-r from-academic-blue to-academic-blue-dark text-white hover:shadow-md transition-all"
+                  >
+                    Continue →
+                  </button>
+                </>
+              ) : activeUnit.type === 'practice-ai' ? (
+                <PracticeUnit
+                  unit={activeUnit}
+                  onComplete={handleUnitComplete}
+                  onOpenChatbot={() => chatbotRef.current?.open()}
+                />
+              ) : activeUnit.type === 'produce' ? (
+                <ProduceUnit
+                  unit={activeUnit}
+                  onComplete={handleUnitComplete}
+                  onWritingSubmit={handleWritingSubmit}
+                  onOpenChatbot={() => chatbotRef.current?.open()}
+                />
+              ) : activeUnit.type === 'review' ? (
+                <>
+                  <CheckThinkUnit unit={activeUnit} lessonId={lessonId} lessonTitle={lesson.title} />
+                  <button
+                    onClick={handleUnitComplete}
+                    className="w-full py-3 rounded-lg font-display font-semibold bg-gradient-to-r from-progress-green to-progress-green-dark text-white hover:shadow-md transition-all mt-4"
+                  >
+                    Finish Lesson 🎉
+                  </button>
+                </>
               ) : (
                 <>
                   <TeachingUnit unit={activeUnit} />
@@ -906,6 +947,7 @@ export default function LessonDetailPage() {
       </section>
 
         <Chatbot
+          ref={chatbotRef}
           lessonTitle={lesson.title}
           unitTitle={activeUnit?.title || ''}
           unitType={activeUnit?.type || 'teach'}
