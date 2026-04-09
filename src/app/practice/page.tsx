@@ -1,6 +1,7 @@
 // src/app/practice/page.tsx
 'use client'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import QuizOption from '@/components/QuizOption'
 
 const quizData = {
@@ -20,12 +21,17 @@ const quizData = {
 }
 
 export default function PracticePage() {
+  const router = useRouter()
   const [selected, setSelected] = useState<string | null>(null)
   const [showFeedback, setShowFeedback] = useState(false)
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
 
   const handleSelect = (letter: string) => {
+    const option = quizData.question.options.find(o => o.letter === letter)
+    const correct = option?.correct ?? false
     setSelected(letter)
     setShowFeedback(true)
+    setIsCorrect(correct)
   }
 
   const progress = (quizData.currentQuestion / quizData.totalQuestions) * 100
@@ -34,7 +40,7 @@ export default function PracticePage() {
     <main>
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
-        <span className="text-[#64748B]">Exit</span>
+        <span className="text-[#64748B] cursor-pointer" onClick={() => router.push('/')}>Exit</span>
         <div className="flex items-center gap-2">
           <span className="text-sm text-[#64748B]">{quizData.currentQuestion} / {quizData.totalQuestions}</span>
           <div className="w-28 h-2 bg-[#E2E8F0] rounded-full">
@@ -80,7 +86,7 @@ export default function PracticePage() {
       </div>
 
       {/* Feedback */}
-      {showFeedback && (
+      {showFeedback && isCorrect && (
         <div className="bg-gradient-to-br from-[#DCFCE7] to-[#BBF7D0] rounded-2xl p-5 border border-[#10B981] mb-4">
           <div className="flex items-center gap-2.5 mb-2.5">
             <span className="text-2xl">🎉</span>
@@ -95,9 +101,24 @@ export default function PracticePage() {
         </div>
       )}
 
+      {showFeedback && !isCorrect && (
+        <div className="bg-gradient-to-br from-[#FCE7F3] to-[#FECDD3] rounded-2xl p-5 border border-[#FC5B5B] mb-4">
+          <div className="flex items-center gap-2.5 mb-2.5">
+            <span className="text-2xl">Try again!</span>
+            <div>
+              <div className="font-bold text-[#FC5B5B]">Not quite</div>
+              <div className="text-xs text-[#64748B]">Pick the right answer</div>
+            </div>
+          </div>
+          <p className="text-sm text-[#64748B]">
+            "Teacher" names a person. Look for words that name <strong>people, places, things, or ideas</strong>.
+          </p>
+        </div>
+      )}
+
       {/* Next Button */}
       {showFeedback && (
-        <button className="btn-primary w-full">Next Question →</button>
+        <button className="btn-primary w-full" onClick={() => router.push('/grammar/1a')}>Next Question →</button>
       )}
     </main>
   )
