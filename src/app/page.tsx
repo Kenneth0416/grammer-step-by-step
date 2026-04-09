@@ -1,7 +1,11 @@
+'use client'
+
+import { useRouter } from 'next/navigation'
 import StatsCard from '@/components/StatsCard'
 import CourseCard from '@/components/CourseCard'
 
 export default function HomePage() {
+  const router = useRouter()
   return (
     <main>
       {/* Hero Section */}
@@ -13,7 +17,7 @@ export default function HomePage() {
         <p className="text-[#64748B] text-sm mb-4">
           AI-powered lessons with instant feedback
         </p>
-        <button className="btn-primary">
+        <button className="btn-primary" onClick={() => router.push('/grammar')}>
           Start Learning →
         </button>
       </div>
@@ -42,11 +46,14 @@ export default function HomePage() {
             </div>
             <div>
               <div className="font-semibold text-[#22497C] text-sm">AI Grammar Tutor</div>
-              <div className="text-xs text-[#64748B]">Ask me anything</div>
+              <div className="text-xs text-[#64748B]">What is a noun?</div>
             </div>
           </div>
-          <button className="bg-[#22497C] text-white px-4 py-2 rounded-full text-sm font-medium">
-            Chat →
+          <button
+            className="bg-[#22497C] text-white px-4 py-2 rounded-full text-sm font-medium"
+            onClick={() => router.push('/grammar/1a')}
+          >
+            Chat with AI Tutor →
           </button>
         </div>
       </div>
