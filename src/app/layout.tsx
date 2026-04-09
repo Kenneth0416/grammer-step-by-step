@@ -1,5 +1,11 @@
 import './globals.css'
 import Header from '@/components/Header'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Grammai Pen',
+  description: 'AI-powered English grammar learning for curious minds',
+}
 
 export default function RootLayout({
   children,
