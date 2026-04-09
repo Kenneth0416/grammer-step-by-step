@@ -36,6 +36,10 @@ export default function UnitTabs({ units, activeUnit, completedUnits, onSelect }
               }`}>
                 {unit.title}
               </div>
+              <div className="mt-0.5">
+                {isComplete && <span className="text-[10px] text-[#10B981]">✓</span>}
+                {isActive && <span className="text-[10px] text-white">→</span>}
+              </div>
             </button>
           )
         })}

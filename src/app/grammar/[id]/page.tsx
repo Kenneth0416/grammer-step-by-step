@@ -42,7 +42,7 @@ export default function CourseDetailPage({ params }: { params: { id: string } })
           ← <span className="font-semibold">Back</span>
         </Link>
         <span className="bg-[#FEF9C3] text-[#D97706] px-3 py-1 rounded-xl text-sm font-semibold">
-          {courseData.completedUnits.length} / {courseData.units.length}
+          {activeUnit} / {courseData.units.length}
         </span>
       </div>
 
@@ -78,14 +78,16 @@ export default function CourseDetailPage({ params }: { params: { id: string } })
           <p className="text-sm text-[#64748B] mb-4">Learn about the four types of nouns: people, places, things, and ideas.</p>
 
           {/* Examples Grid */}
-          <div className="grid grid-cols-2 gap-2.5 mb-4">
-            {courseData.content[2 as keyof typeof courseData.content].examples.map((ex) => (
-              <div key={ex.type} className={`${ex.color} p-2.5 rounded-xl`}>
-                <div className="text-sm mb-1">{ex.emoji}</div>
-                <div className={`text-[11px] font-semibold ${ex.textColor}`}>{ex.type}</div>
-              </div>
-            ))}
-          </div>
+          {activeUnit === 2 && courseData.content[2] && (
+            <div className="grid grid-cols-2 gap-2.5 mb-4">
+              {courseData.content[2].examples.map((ex) => (
+                <div key={ex.type} className={`${ex.color} p-2.5 rounded-xl`}>
+                  <div className="text-sm mb-1">{ex.emoji}</div>
+                  <div className={`text-[11px] font-semibold ${ex.textColor}`}>{ex.type}</div>
+                </div>
+              ))}
+            </div>
+          )}
 
           <button className="btn-primary w-full">Start Unit →</button>
         </div>
