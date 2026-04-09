@@ -1,6 +1,9 @@
+import { Nunito } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/Header'
 import type { Metadata } from 'next'
+
+const nunito = Nunito({ subsets: ['latin'], variable: '--font-nunito' })
 
 export const metadata: Metadata = {
   title: 'Grammai Pen',
@@ -14,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen p-4 md:p-6 lg:p-8">
+      <body className={`${nunito.variable} min-h-screen p-4 md:p-6 lg:p-8`}>
         <div className="max-w-2xl mx-auto">
           <Header />
           {children}
