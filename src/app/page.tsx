@@ -1,3 +1,6 @@
+import StatsCard from '@/components/StatsCard'
+import CourseCard from '@/components/CourseCard'
+
 export default function HomePage() {
   return (
     <main>
@@ -13,6 +16,21 @@ export default function HomePage() {
         <button className="btn-primary">
           Start Learning →
         </button>
+      </div>
+
+      {/* Stats Row */}
+      <div className="grid grid-cols-3 gap-3 mb-5">
+        <StatsCard value="280" label="Points" color="gold" />
+        <StatsCard value="12" label="Badges" color="cyan" />
+        <StatsCard value="#5" label="Ranking" color="coral" />
+      </div>
+
+      {/* My Courses */}
+      <h2 className="text-[#22497C] font-semibold mb-3">My Courses</h2>
+      <div className="flex flex-col gap-3">
+        <CourseCard letter="A" title="Nouns Basics" subtitle="6 units completed" status="complete" />
+        <CourseCard letter="B" title="Singular & Plural" subtitle="4 of 6 units" status="progress" progress={67} />
+        <CourseCard letter="C" title="Countable & Uncountable" subtitle="Coming soon" status="locked" />
       </div>
     </main>
   )
