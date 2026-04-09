@@ -32,6 +32,24 @@ export default function HomePage() {
         <CourseCard letter="B" title="Singular & Plural" subtitle="4 of 6 units" status="progress" progress={67} />
         <CourseCard letter="C" title="Countable & Uncountable" subtitle="Coming soon" status="locked" />
       </div>
+
+      {/* AI Tutor Card */}
+      <div className="bg-gradient-to-br from-[#EFF6FF] to-[#E0F2FE] rounded-xl p-5 border border-[#BAE6FD] mt-5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-gradient-to-br from-[#FCC30A] to-[#E6A800] rounded-xl flex items-center justify-center">
+              <span className="text-lg">✏️</span>
+            </div>
+            <div>
+              <div className="font-semibold text-[#22497C] text-sm">AI Grammar Tutor</div>
+              <div className="text-xs text-[#64748B]">Ask me anything</div>
+            </div>
+          </div>
+          <button className="bg-[#22497C] text-white px-4 py-2 rounded-full text-sm font-medium">
+            Chat →
+          </button>
+        </div>
+      </div>
     </main>
   )
 }
