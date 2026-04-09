@@ -75,7 +75,7 @@ body {
 
 .badge-complete {
   background: var(--green-tint);
-  color: var(--green);
+  color: #10B981;
 }
 
 .badge-progress {

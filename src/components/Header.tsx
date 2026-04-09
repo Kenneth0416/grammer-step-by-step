@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function Header() {
   return (
     <header className="flex justify-between items-center mb-7">
@@ -9,8 +11,8 @@ export default function Header() {
         </span>
       </div>
       <div className="flex items-center gap-3">
-        <span className="text-sm text-[#64748B]">Grammar</span>
-        <span className="text-sm text-[#64748B]">Practice</span>
+        <Link href="/grammar" className="text-sm text-[#64748B] hover:text-[#22497C]">Grammar</Link>
+        <Link href="/practice" className="text-sm text-[#64748B] hover:text-[#22497C]">Practice</Link>
         <div className="w-8 h-8 bg-[#22497C] rounded-full" />
       </div>
     </header>
